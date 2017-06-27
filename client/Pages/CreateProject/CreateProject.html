@@ -1,0 +1,38 @@
+<style>
+    .title {
+        text-align: center;
+        margin-top: 5em;
+    }
+
+    textarea[id="projectText"] {
+        height: 15em;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="twelve columns title">
+            <h1>Collaborative Translator</h1>
+            <p>A Collaborative tool for translating texts easily</p>
+        
+        <hr />
+        </div>
+    </div>
+    <form>
+        <div class="row">
+            <div class="six columns">
+                <label for="projectName">Project Name</label>
+                <input type="text" name="projectName" value="" class="u-full-width" />
+
+                <label for="projectPwd">Optional: Set a password to this project</label>
+                <input type="text" name="projectPwd" value="" class="u-full-width" />
+
+                <input type="submit" value="Create!" class="button button-primary"/>
+            </div>
+            <div class="six columns">
+                <label for="projectText">Text to be Translated</label>
+                <textarea class="u-full-width" rows="150" placeholder="Paste here the text to be translated" id="projectText"></textarea>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,63 @@
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+    
+    .projectPage {
+        display: table;
+    }
+    
+    .editor {
+        border: solid 1px;
+        min-height: 89vh;
+        max-height: 89vh;
+        min-width: 48vw;
+        max-width: 48vw;
+        float: left;
+        margin-left: 4px;
+        padding: 6px;
+    }
+    
+    .navbar {
+        margin-left: 4px;
+    }
+    
+    #editor {
+        overflow: scroll;
+    }
+    
+    #textBeingTranslated {
+        overflow: scroll;
+    }
+    
+    .right-align {
+        float: right;
+    }
+    
+    .navbar-button {
+        position: relative;
+        margin: 10% 5px 0 1%;
+    }
+</style>
+
+<div class="projectPage">
+    <nav class="navbar">
+        <ul class="navbar-list">
+            <li class="navbar-item">
+                <a href="" class="navbar-link">Save Translation</a>
+            </li>
+            <li class="navbar-item right-align">
+                <a href="" class="navbar-link">Users</a>
+            </li>
+            <li class="navbar-item right-align">
+                <a href="" class="navbar-button button" role="button">Add Text</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="editor" id="editor" contenteditable="true"></div>
+    <div class="editor" id="textBeingTranslated">
+        {{text}}
+
+    </div>
+</div>
