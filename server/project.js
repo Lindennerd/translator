@@ -1,100 +1,83 @@
-var database = require('./database');
-var md5 = require('md5');
+const database = require('./database');
+const md5 = require('md5');
 
-function Project(app) {
+class Project {
+    constructor(app) {
+        this.app = app;
 
-    this.validateProject = function (project) {
+        this.app.route('/project')
+            .post((req, res) => {
+                this.createProject(req.body)
+                    .then((result) => { res.status(200).send(result) })
+                    .catch((err) => { res.status(400).send(err) })
+            })
+
+            .get((req, res) => {
+                this.getProject(req.query.name)
+                    .then((project) => {
+                        if(project.pwd) res.status(303).send('this project requires a password')
+                        else res.status(200).send(project);
+                    })
+                    .catch((err) => { res.send(400).send(400); })
+            });
+        
+        this.app.route('/password')
+            .post((req, res) => {
+                var project = req.body;
+                this.validatePassword(project.pwd, project.name)
+                    .then((isValid) => { 
+                        if(isValid) {
+                            this.getProject(project.name)
+                                .then((project) => { res.status(200).send(project) })
+                                .catch((err) => { res.status(400).send(err) })
+                        } else {
+                            res.status(400).send('Invalid Password');
+                        }
+                     })
+            })
+    }
+
+    validateProject(project) {
         return project.name && project.name !== '';
     }
 
-    this.createProject = function (project, callback) {
-        if (!this.validateProject(project)) {
-            callback('invalid project creation attempt');
-            return;
-        } else {
-            if (project.pwd) { 
-                project.pwd = md5(project.pwd); 
-            }
+    createProject(project) {
+        return new Promise((resolve, reject) => {
+            if (this.validateProject(project)) {
+                project.pwd = md5(project.pwd);
 
-            database.addProject(project, function (err, result) {
-                callback(err, result);
-            });
-        }
-    }
-
-    this.getProject = function (projectName, callback) {
-        database.getProject(projectName, function (err, results) {
-            if (err) {
-                callback(err);
+                database.addProject(project)
+                    .then((result) => { resolve(result); })
+                    .catch((err) => { reject(err); });
             } else {
-                if (results.length <= 0) {
-                    this.createProject({name: projectName}, callback)
-                } else {
-                    callback(err, results[0]);
-                }
+                reject('invalid project creation attempt');
             }
 
-        }.bind(this));
-    }
-
-    this.validatePassword = function (projectPwd, projectName, callback) {
-        database.getProject(projectName, function (err, result) {
-            if (err) {
-                callback(err);
-            } else {
-                var isValid = result.length > 0 && md5(projectPwd) === result[0].pwd;
-                callback(err, isValid);
-            }
         })
     }
 
-    app.route('/project')
-
-        .post(function (req, res) {
-            this.createProject(req.body, function (err, result) {
-                if (!err) {
-                    res.status(200).send(result);
-                } else {
-                    res.status(400).send(err);
-                }
-            })
-        }.bind(this))
-
-        .get(function (req, res) {
-            this.getProject(req.query.name, function (err, result) {
-                if (err) {
-                    res.status(400).send(err);
-                } else {
-                    if (result.pwd) {
-                        res.status(400).send('this project require a password');
+    getProject(projectName) {
+        return new Promise((resolve, reject) => {
+            database.getProject(projectName)
+                .then((project) => {
+                    if (!project) {
+                        this.createProject({ name: projectName })
+                            .then((result) => { resolve(result); })
+                            .catch((err) => { reject(err); })
                     } else {
-                        res.status(200).send(result);
+                        resolve(project);
                     }
-                }
-            });
-        }.bind(this));
+                })
+        });
+    }
 
-    app.route('/password')
-        .post(function (req, res) {
-            this.validatePassword(req.body.pwd, req.body.name, function (err, isValid) {
-                if (err) {
-                    res.status(400).send(err)
-                } else if (isValid) {
-                    this.getProject(req.body.name, function (err, result) {
-                        if (err) {
-                            res.status(400).send(err)
-                        } else {
-                            res.status(200).send(result);
-                        }
-                    })
-
-                } else {
-                    res.status(400).send('Invalid Password')
-                }
-
-            }.bind(this))
-        }.bind(this))
-
+    validatePassword(password, projectName) {
+        return new Promise((resolve, reject) =>{
+            database.getProject(projectName)
+                .then((project) => { resolve(md5(password) === project.pwd); })
+                .catch((err) => { reject(err); });
+        });
+    }
 }
 
 module.exports = Project;

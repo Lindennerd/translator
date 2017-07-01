@@ -23,7 +23,7 @@ function CreateProject() {
             templateUrl: './Pages/CreateProject/CreateProject.html'
         });
 
-        pb.render(function () {
+        pb.render().then(function() {
             $('input[name="projectName"]').val(makeid());
 
             $('form').submit(function (ev) {

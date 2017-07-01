@@ -13,7 +13,7 @@ function Project(projectName) {
             data: project
         });
 
-        pb.render(function () {
+        pb.render().then(function() {
             this.setSocket();
             $('#editor').on('blur keyup paste input', function (ev) {
                 var text = $(ev.target).text();
@@ -22,34 +22,7 @@ function Project(projectName) {
                     $('#editor').text(text);
                 })
 
-
             }.bind(this));
-        }.bind(this));
-    }
-
-    this.createPwdPage = function () {
-        var pb = new PageBuilder({
-            container: '#main',
-            templateUrl: './Pages/Project/PwdPage.html',
-        });
-
-        pb.render(function () {
-            $('#passwordInput').submit(function (ev) {
-                ev.preventDefault();
-                var request = $.ajax({
-                    url: 'http://localhost:8080/password/',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ name: projectName, pwd: $('input[type="password"]').val() })
-                })
-                    .done(function (project) {
-                        this.createProjectPage(project)
-                    }.bind(this))
-                    .fail(function(){
-                        $('input[name="password"]').notify("Wrong Password", "error");
-                    });
-
-            }.bind(this))
         }.bind(this));
     }
 
@@ -62,13 +35,12 @@ function Project(projectName) {
         })
             .done(function (project) {
                 this.createProjectPage(project);
+            
             }.bind(this))
             .fail(function (msg, resp) {
-                this.createPwdPage();
+                var pwdPage = new PwdPage(projectName);
+                pwdPage.render();
+
             }.bind(this));
-
-
-
     }
-
 }

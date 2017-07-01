@@ -13,7 +13,6 @@ function Server() {
         var socket = new socketActions(httpServer);
 
         server.use(express.static(__dirname + '/../client'));
-        //server.use(bodyParser.urlencoded({ extended: false }))
         server.use(bodyParser.json());
 
         new project(server);

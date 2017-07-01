@@ -3,11 +3,11 @@
     body {
         height: 100%;
     }
-    
+
     .projectPage {
         display: table;
     }
-    
+
     .editor {
         border: solid 1px;
         min-height: 89vh;
@@ -18,23 +18,23 @@
         margin-left: 4px;
         padding: 6px;
     }
-    
+
     .navbar {
         margin-left: 4px;
     }
-    
+
     #editor {
         overflow: scroll;
     }
-    
+
     #textBeingTranslated {
         overflow: scroll;
     }
-    
+
     .right-align {
         float: right;
     }
-    
+
     .navbar-button {
         position: relative;
         margin: 10% 5px 0 1%;
@@ -48,10 +48,39 @@
                 <a href="" class="navbar-link">Save Translation</a>
             </li>
             <li class="navbar-item right-align">
-                <a href="" class="navbar-link">Users</a>
-            </li>
-            <li class="navbar-item right-align">
-                <a href="" class="navbar-button button" role="button">Add Text</a>
+                <a href="" class="navbar-button button" role="button" data-popover="options">Options</a>
+
+                <div id="codeNavPopover" class="popover">
+                    <ul class="popover-list">
+                        <li class="popover-item">
+                            <a class="popover-link" href="#grid">Grid</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#typography">Typography</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#buttons">Buttons</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#forms">Forms</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#lists">Lists</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#code">Code</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#tables">Tables</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#queries">Queries</a>
+                        </li>
+                        <li class="popover-item">
+                            <a class="popover-link" href="#utilities">Utilities</a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </nav>
